@@ -1,5 +1,6 @@
 package com.example.master.mysunshine;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,8 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -79,7 +82,7 @@ public class ForecastFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ListView forecastView = (ListView) rootView.findViewById(R.id.listview_forecast);
 
-        ArrayList<String> forecastData = new ArrayList<>();
+        final ArrayList<String> forecastData = new ArrayList<>();
         forecastData.add("Ter Jun 06 - Clear - 10/20");
 
         forecastAdapter = new ArrayAdapter(getActivity(),
@@ -89,8 +92,16 @@ public class ForecastFragment extends Fragment {
 
         forecastView.setAdapter(forecastAdapter);
 
-//        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
-//        fetchWeatherTask.execute(this.postalCode);
+        forecastView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String forecastDetails = (String)forecastAdapter.getItem(position);
+//                Toast.makeText(getActivity(),forecastDetails,Toast.LENGTH_SHORT).show();
+                Intent sendDetails = new Intent(getActivity(),DetailActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT,forecastDetails);
+                startActivity(sendDetails);
+            }
+        });
 
         return rootView;
     }
@@ -140,7 +151,6 @@ public class ForecastFragment extends Fragment {
                         .appendQueryParameter(DAYS_PARAM, Integer.toString(numberOfDays))
                         .appendQueryParameter(QUERY_PARAM, postalCodes[0]);
                 URL url = new URL(builder.build().toString());
-                Log.v(LOG_TAG,url.toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
