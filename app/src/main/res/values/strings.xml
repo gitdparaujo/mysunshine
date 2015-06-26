@@ -4,4 +4,18 @@
     <string name="action_refresh" translatable="false">Refresh</string>
     <string name="title_activity_detail">WeatherDetail</string>
     <string name="hello_world">Hello world!</string>
+    <string name="pref_location_default">81210,br</string>
+    <string name="pref_location_key">location</string>
+    <string name="pref_location_title">Location</string>
+    <string name="pref_unit_default">metric</string>
+    <string name="pref_unit_key">unit</string>
+    <string name="pref_unit_title">Unit</string>
+    <string-array name="pref_unit_entries">
+        <item>Metric</item>
+        <item>Imperial</item>
+    </string-array>
+    <string-array name="pref_unit_entry_values">
+        <item>metric</item>
+        <item>imperial</item>
+    </string-array>
 </resources>

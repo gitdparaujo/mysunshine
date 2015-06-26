@@ -1,9 +1,12 @@
 package com.example.master.mysunshine;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.Log;
@@ -39,11 +42,11 @@ public class ForecastFragment extends Fragment {
 
     private final String LOG_TAG = ForecastFragment.class.getSimpleName();
     private String postalCode;
+    private String units;
     private ArrayAdapter forecastAdapter;
 
     public ForecastFragment() {
-        postalCode = "81210,br";
-    }
+        }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,8 +70,7 @@ public class ForecastFragment extends Fragment {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
 
-            FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
-            fetchWeatherTask.execute(this.postalCode);
+            updateWeather();
 
             return true;
         }
@@ -79,16 +81,16 @@ public class ForecastFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Intent load = getActivity().getIntent();
+        postalCode = load.getStringExtra(Intent.EXTRA_TEXT);
+
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ListView forecastView = (ListView) rootView.findViewById(R.id.listview_forecast);
-
-        final ArrayList<String> forecastData = new ArrayList<>();
-        forecastData.add("Ter Jun 06 - Clear - 10/20");
 
         forecastAdapter = new ArrayAdapter(getActivity(),
                 R.layout.list_item_forecast,
                 R.id.list_item_forecast_textview,
-                forecastData);
+                new ArrayList<String>());
 
         forecastView.setAdapter(forecastAdapter);
 
@@ -106,6 +108,25 @@ public class ForecastFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        updateWeather();
+    }
+
+    public void updateWeather(){
+        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        this.postalCode = prefs.getString(getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default));
+        this.units = prefs.getString(getString(R.string.pref_unit_key),
+                getString(R.string.pref_unit_default));
+        String[] parameters = new String[]{this.postalCode,this.units};
+        fetchWeatherTask.execute(parameters);
+    }
+
+
     /**
      * Async class used to retrieve data from the OpenWeatherMap API
      */
@@ -119,7 +140,7 @@ public class ForecastFragment extends Fragment {
         final String DAYS_PARAM = "cnt";
 
         @Override
-        protected String[] doInBackground(String... postalCodes) {
+        protected String[] doInBackground(String... inputValues) {
 
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
@@ -130,7 +151,6 @@ public class ForecastFragment extends Fragment {
             String forecastJsonStr = null;
 
             String mode = "json";
-            String units = "metric";
             int numberOfDays = 7;
 
             String[] nDaysForecast = new String[numberOfDays];
@@ -147,9 +167,9 @@ public class ForecastFragment extends Fragment {
                         .appendPath("forecast")
                         .appendPath("daily")
                         .appendQueryParameter(FORMAT_PARAM, mode)
-                        .appendQueryParameter(UNITS_PARAM, units)
+                        .appendQueryParameter(UNITS_PARAM, inputValues[1])
                         .appendQueryParameter(DAYS_PARAM, Integer.toString(numberOfDays))
-                        .appendQueryParameter(QUERY_PARAM, postalCodes[0]);
+                        .appendQueryParameter(QUERY_PARAM, inputValues[0]);
                 URL url = new URL(builder.build().toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
@@ -257,6 +277,11 @@ public class ForecastFragment extends Fragment {
         final String OWM_DESCRIPTION = "main";
 
         JSONObject forecastJson = new JSONObject(forecastJsonStr);
+
+        JSONObject locationJson = forecastJson.getJSONObject("city");
+        String location = locationJson.getString("name") + ", " + locationJson.getString("country");
+        Log.i(LOG_TAG,location);
+
         JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
 
         // OWM returns daily forecasts based upon the local time of the city that is being
