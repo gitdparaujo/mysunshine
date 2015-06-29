@@ -93,8 +93,9 @@ ActionProviders
 
 ShareActionProvider
 o É uma subclasse de ActionProvider que gerencia o compartilhamento de informações com outros aplicativos;
-o Normalmente associado a um MenuItem com parâmetro app:actionProviderClass e showAsAction.
-o Requer a configuração de um tema compatível com AppCompat
+o Normalmente associado a um MenuItem com parâmetro app:actionProviderClass e showAsAction;
+o Requer a configuração de um tema compatível com AppCompat;
+o O Intent do ShareActionProvider deve ter o flag FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, para voltar à atividade original.
 
 #######################################################
 Intent
@@ -129,5 +130,12 @@ o JSONObject são criados a partir de String;
 o JSONObject são delimitados por {} e tem chaves exclusivas no AVP;
 o JSONArray são Arrays de JSONObject e outros AVP, delimitado por [] e pode ter repetição de valores na sua hierarquia.
 
+#######################################################
+Receivers
+
+o Ouve broadcasts enviados por outras aplicações. Implementa a classe BroadcastReceiver;
+o Sobrescreve pelo menos o método chamado onReceive;
+o Deve se registrar, via uma entrada no Manifest, ou dinamicamente via registerReceiver;
+o Está associado a um intent-filter, que diz em quais eventos a app está interessada.
 
 
