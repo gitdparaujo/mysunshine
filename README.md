@@ -108,7 +108,13 @@ Intent-filter
 
 o category.LAUNCHER para aparecer entre os demais apps;
 o category.DEFAULT para ser elegível a Intent implícito;
-o Precisa implementar todas as categorias de um Intent implícito para ser elegível;
+o Precisa implementar todas as categorias de um Intent implícito para ser elegível.
+
+Activity Lifecycle
+
+o onCreate -> Created -> onStart -> Visible -> onResume -> Focused;
+o onPause -> Lost focus -> onStop -> Not visible -> onDestroy -> Not running;
+o Aplicações podem ser terminadas sem aviso, após a chamada do método onPause(). Salvar informações do assinante.
 
 #######################################################
 Internet Connections
