@@ -144,4 +144,34 @@ o Sobrescreve pelo menos o método chamado onReceive;
 o Deve se registrar, via uma entrada no Manifest, ou dinamicamente via registerReceiver;
 o Está associado a um intent-filter, que diz em quais eventos a app está interessada.
 
+#######################################################
+SQLite
+
+o Linguagem de programação para armazenar dados estruturados das aplicações;
+o Base de dados contém um Contract, que define tabelas e colunas das bases de dados;
+o São criadas a partir da classe SQLiteOpenHelper.
+
+SQLiteOpenHelper
+
+o É um auxiliar na criação de bases de dados;
+o São criados dentro do método onCreate(SQLiteDatabase sqLiteDatabase);
+o A base é criada com o comando sqLiteDatabase.execSQL(String);
+
+#######################################################
+Android Tests
+
+TestSuite
+o Conjunto de testes a serem executados;
+o Deve sobrescrever o método public static Test suite(), que será usado pelo junit como coleção dos testes a serem feitos;
+o É construído através de um TestSuiteBuilder;
+o É populado pelo método .includeAllPackagesUnderHere() e construído pelo método .build().
+
+AndroidTestCase
+o Caso de teste usado quando é necessário receber um contexto, como, por exemplo, para acessar bases de dados;
+o Estende a classe TestCase;
+o Recebe uma variável mContext, que referencia o contexto;
+o Todos os testes devem ser definidos por métodos com nome iniciado por 'test';
+o Deve sobrescrever os métodos setUp() e tearDown().
+
+
 
