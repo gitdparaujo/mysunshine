@@ -154,8 +154,15 @@ o São criadas a partir da classe SQLiteOpenHelper.
 SQLiteOpenHelper
 
 o É um auxiliar na criação de bases de dados;
-o São criados dentro do método onCreate(SQLiteDatabase sqLiteDatabase);
+o As bases são de fato craiadas dentro do método .onCreate;
 o A base é criada com o comando sqLiteDatabase.execSQL(String);
+o Mudanças na tabela ou nas suas colunas devem sempre atualizar a versão. São realizadas no método .onUpgrade
+
+ContentValues
+
+o É um conjunto de valores de diversos formatos;
+o É usado para escrever em bases de dados no Android;
+o Estrutura simples, com métodos get() e put().
 
 #######################################################
 Android Tests
