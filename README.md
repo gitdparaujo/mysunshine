@@ -180,5 +180,16 @@ o Recebe uma variável mContext, que referencia o contexto;
 o Todos os testes devem ser definidos por métodos com nome iniciado por 'test';
 o Deve sobrescrever os métodos setUp() e tearDown().
 
+#######################################################
+Content Providers
 
+o Provem métodos para enviar e receber dados de outras aplicações;
+o São construídos em 4 etapas: Determinar URIs, Atualizar o Contrato, Preencher o URIMatcher e Implementar Funções;
+o content://com.example.master.mysunshine/Weather/94043?DATE=1435104000
+o scheme = content;
+o authority = com.example.master.mysunshine
 
+Content Resolver
+
+o Ferramenta que ajuda os requests a encontrar os ContentProviders corretos;
+o Possui 4 métodos: query (ler), insert (adicionar), update (atualizar) e delete (apagar);
