@@ -45,7 +45,7 @@ o	Subclasses: ListView, Spinner, ListView, Gallery, etc.
 
 ListView
 o	É uma AdapterView que mostra itens em uma lista vertical;
-o	Esta associado a um ArrayAdapter;
+o	Esta associado a um ArrayAdapter ou CursorAdapter;
 o	É descrito por um arquivo XML (res/layout);
 o	Possui um ID.
 
@@ -53,6 +53,9 @@ ArrayAdapter
 o	É um Adapter suportado por um Array de Objects arbitrários.
 o	Possui referência a um resource id (res/layout) com um único TextView.
 o	Preenche o TextView com o conteúdo do toString() de cada Object.
+
+CursorAdapter
+o Passa o conteúdo de um cursor para um objeto do tipo ListView
 
 #######################################################
 Configurações e Preferências
@@ -76,7 +79,6 @@ o	Subclasses: CheckBoxPreference, EditTextPreference, ListPreference, Preference
 SharedPreferences
 o É uma referência a um arquivo de preferências, com AVP definidos por keys;
 o Podem ser obtidos através do método PreferenceManager.getDefaultSharedPredferences;
-
 
 #######################################################
 Tarefas Assíncronas
