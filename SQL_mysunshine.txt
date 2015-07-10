@@ -1,0 +1,23 @@
+CREATE TABLE `weather` (
+	`_id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	`location_id`	INTEGER NOT NULL,
+	`date`	INTEGER NOT NULL,
+	`short_desc`	TEXT NOT NULL,
+	`weather_id`	INTEGER NOT NULL,
+	`min`	REAL NOT NULL,
+	`max`	REAL NOT NULL,
+	`humidity`	REAL NOT NULL,
+	`pressure`	REAL NOT NULL,
+	`wind`	REAL NOT NULL,
+	`degrees`	REAL NOT NULL,
+	FOREIGN KEY (location_id) REFERENCES location(_id),
+	UNIQUE (date,location_id) ON CONFLICT REPLACE
+);
+
+CREATE TABLE `location` (
+	`_id`	INTEGER PRIMARY KEY AUTOINCREMENT,
+	`coord_lat`	REAL NOT NULL,
+	`coord_long`	REAL NOT NULL,
+	`city_name`	TEXT NOT NULL,
+	`location_setting`	TEXT NOT NULL UNIQUE
+);

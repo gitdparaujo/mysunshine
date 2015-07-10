@@ -18,12 +18,14 @@ package com.example.master.mysunshine;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.support.v7.widget.ShareActionProvider;
 import android.widget.TextView;
 
 
@@ -40,8 +42,12 @@ public class DetailActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-        Intent receivedDetail = getIntent();
-        forecastDetail = receivedDetail.getStringExtra(Intent.EXTRA_TEXT);
+
+        Intent intent = getIntent();
+        if(intent != null && intent.hasExtra(Intent.EXTRA_TEXT))
+        {
+            forecastDetail = intent.getStringExtra(Intent.EXTRA_TEXT);
+        }
     }
 
 
@@ -49,7 +55,19 @@ public class DetailActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_detail, menu);
+
+        MenuItem shareItem = menu.findItem(R.id.action_share);
+        ShareActionProvider shareActionProvider = (ShareActionProvider)MenuItemCompat.getActionProvider(shareItem);
+        shareActionProvider.setShareIntent(getShareIntent());
+
         return true;
+    }
+    private Intent getShareIntent()
+    {
+        return new Intent(Intent.ACTION_SEND)
+                .setType("text/plain")
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
+                .putExtra(Intent.EXTRA_TEXT,forecastDetail + " #MySunshineApp");
     }
 
     @Override

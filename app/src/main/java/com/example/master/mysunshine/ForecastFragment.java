@@ -79,7 +79,7 @@ public class ForecastFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView    (LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Intent load = getActivity().getIntent();
         postalCode = load.getStringExtra(Intent.EXTRA_TEXT);
