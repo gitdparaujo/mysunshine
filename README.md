@@ -160,6 +160,12 @@ o As bases são de fato craiadas dentro do método .onCreate;
 o A base é criada com o comando sqLiteDatabase.execSQL(String);
 o Mudanças na tabela ou nas suas colunas devem sempre atualizar a versão. São realizadas no método .onUpgrade
 
+SQLiteQueryBuilder
+
+o É uma classe que ajuda a montar uma query SQL;
+o .setTables define as tabelas que serão consultadas;
+o .query executa a consulta conforme a projection, selecion e selection args.
+
 ContentValues
 
 o É um conjunto de valores de diversos formatos;
@@ -189,9 +195,27 @@ o Provem métodos para enviar e receber dados de outras aplicações;
 o São construídos em 4 etapas: Determinar URIs, Atualizar o Contrato, Preencher o URIMatcher e Implementar Funções;
 o content://com.example.master.mysunshine/Weather/94043?DATE=1435104000
 o scheme = content;
-o authority = com.example.master.mysunshine
+o authority = com.example.master.mysunshine;
+o Possui constantes int para cada um dos paths;
+o Contém um UriMatcher para simplificar a identificação com as Uri;
+o Contém um SQLOpenHelper para ajudar abrir as bases SQLite;
+o Contém um SQLiteQueryBuilder para ajudar a fazer as queries SQL;
+o Contém Strings de suporte para realizar as queries SQL;
+o Contém as funções para fazer as queries na nase de dados;
+o Sobrescreve as funções: onCreate (inicializa o SQLOpenHelper), getType (devolve o tipo do conteúdo), query (busca valores na base de dados), insert (insere ContentValues na base de dados), delete (apaga uma linha no banco de dados), update (atualiza valores no banco de dados) e shutdown (fecha a base de dados). Além disso sobrescreve o método bulkInsert (insere um Array de ContentValues).
+
+ContentProvider Contract
+
+o Possui subclasses que estem BaseColumns, com nomes para as colunas das nossas tabelas;
+o Possui a definição de uma CONTENT_URI e uma string de CONTENT_TYPE;
+o Contém funções que ajudam a construir as queries do ContentProvider.
 
 Content Resolver
 
 o Ferramenta que ajuda os requests a encontrar os ContentProviders corretos;
-o Possui 4 métodos: query (ler), insert (adicionar), update (atualizar) e delete (apagar);
+o Possui 4 métodos: query (ler), insert (adicionar), update (atualizar) e delete (apagar).
+
+UriMatcher
+
+o Classe de apoio para comparar URIs em ContentProviders;
+o Facilita realizar o match entre o path de uma Uri com os valores pré-definidos.
