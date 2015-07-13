@@ -55,7 +55,9 @@ o	Possui referência a um resource id (res/layout) com um único TextView.
 o	Preenche o TextView com o conteúdo do toString() de cada Object.
 
 CursorAdapter
-o Passa o conteúdo de um cursor para um objeto do tipo ListView
+o É um adaptador que passa o conteúdo de um cursor para um objeto do tipo ListView
+o O cursor deve conter uma coluna _ID;
+o Precisa ter a implementação dos métodos newView e bindView;
 
 #######################################################
 Configurações e Preferências
@@ -101,19 +103,16 @@ o O Intent do ShareActionProvider deve ter o flag FLAG_ACTIVITY_CLEAR_WHEN_TASK_
 
 #######################################################
 Intent
-
 o action.SEND para enviar informações a outra Activity;
 o action.VIEW para visualizar informações específicas, tais como páginas ou mapas;
 o Recebe e envia dados em campos EXTRA.
 
 Intent-filter
-
 o category.LAUNCHER para aparecer entre os demais apps;
 o category.DEFAULT para ser elegível a Intent implícito;
 o Precisa implementar todas as categorias de um Intent implícito para ser elegível.
 
 Activity Lifecycle
-
 o onCreate -> Created -> onStart -> Visible -> onResume -> Focused;
 o onPause -> Lost focus -> onStop -> Not visible -> onDestroy -> Not running;
 o Aplicações podem ser terminadas sem aviso, após a chamada do método onPause(). Salvar informações do assinante.
@@ -122,7 +121,6 @@ o Aplicações podem ser terminadas sem aviso, após a chamada do método onPaus
 Internet Connections
 
 Connection
-
 o Uri.Builder constroi URI com scheme, authority, path e query parameters.
 o Uri são construídas com o método Urí.Builder.build();
 o URL são construídas com os método URL(Uri.toString);
@@ -133,14 +131,12 @@ o As linhas lidas do BufferedReader são usadas na construção de uma String co
 o A entrada JSON é obtidas com um StringBuilder.toString().
 
 JSON Parsing
-
 o JSONObject são criados a partir de String;
 o JSONObject são delimitados por {} e tem chaves exclusivas no AVP;
 o JSONArray são Arrays de JSONObject e outros AVP, delimitado por [] e pode ter repetição de valores na sua hierarquia.
 
 #######################################################
 Receivers
-
 o Ouve broadcasts enviados por outras aplicações. Implementa a classe BroadcastReceiver;
 o Sobrescreve pelo menos o método chamado onReceive;
 o Deve se registrar, via uma entrada no Manifest, ou dinamicamente via registerReceiver;
@@ -148,26 +144,22 @@ o Está associado a um intent-filter, que diz em quais eventos a app está inter
 
 #######################################################
 SQLite
-
 o Linguagem de programação para armazenar dados estruturados das aplicações;
 o Base de dados contém um Contract, que define tabelas e colunas das bases de dados;
 o São criadas a partir da classe SQLiteOpenHelper.
 
 SQLiteOpenHelper
-
 o É um auxiliar na criação de bases de dados;
 o As bases são de fato craiadas dentro do método .onCreate;
 o A base é criada com o comando sqLiteDatabase.execSQL(String);
 o Mudanças na tabela ou nas suas colunas devem sempre atualizar a versão. São realizadas no método .onUpgrade
 
 SQLiteQueryBuilder
-
 o É uma classe que ajuda a montar uma query SQL;
 o .setTables define as tabelas que serão consultadas;
 o .query executa a consulta conforme a projection, selecion e selection args.
 
 ContentValues
-
 o É um conjunto de valores de diversos formatos;
 o É usado para escrever em bases de dados no Android;
 o Estrutura simples, com métodos get() e put().
@@ -190,7 +182,6 @@ o Deve sobrescrever os métodos setUp() e tearDown().
 
 #######################################################
 Content Providers
-
 o Provem métodos para enviar e receber dados de outras aplicações;
 o São construídos em 4 etapas: Determinar URIs, Atualizar o Contrato, Preencher o URIMatcher e Implementar Funções;
 o content://com.example.master.mysunshine/Weather/94043?DATE=1435104000
@@ -205,17 +196,14 @@ o Contém as funções para fazer as queries na nase de dados;
 o Sobrescreve as funções: onCreate (inicializa o SQLOpenHelper), getType (devolve o tipo do conteúdo), query (busca valores na base de dados), insert (insere ContentValues na base de dados), delete (apaga uma linha no banco de dados), update (atualiza valores no banco de dados) e shutdown (fecha a base de dados). Além disso sobrescreve o método bulkInsert (insere um Array de ContentValues).
 
 ContentProvider Contract
-
 o Possui subclasses que estem BaseColumns, com nomes para as colunas das nossas tabelas;
 o Possui a definição de uma CONTENT_URI e uma string de CONTENT_TYPE;
 o Contém funções que ajudam a construir as queries do ContentProvider.
 
 Content Resolver
-
 o Ferramenta que ajuda os requests a encontrar os ContentProviders corretos;
 o Possui 4 métodos: query (ler), insert (adicionar), update (atualizar) e delete (apagar).
 
 UriMatcher
-
 o Classe de apoio para comparar URIs em ContentProviders;
 o Facilita realizar o match entre o path de uma Uri com os valores pré-definidos.
