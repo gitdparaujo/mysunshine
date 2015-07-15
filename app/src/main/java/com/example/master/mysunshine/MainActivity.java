@@ -23,8 +23,6 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new ForecastFragment())
                     .commit();
         }
-        Log.i(LOG_TAG,"onCreate");
-
     }
 
 
@@ -68,7 +66,6 @@ public class MainActivity extends ActionBarActivity {
         Intent launcher = new Intent()
                 .setAction(Intent.ACTION_VIEW)
                 .setData(mapUri);
-        Log.i(LOG_TAG, mapUri.toString());
         if(launcher.resolveActivity(getPackageManager()) != null)
         {
             startActivity(launcher);
@@ -77,8 +74,6 @@ public class MainActivity extends ActionBarActivity {
         {
             Log.e(LOG_TAG,"There is no app capable of handling this event");
         }
-
-
     }
 
     @Override
