@@ -12,7 +12,10 @@ import android.view.MenuItem;
 
 public class MainActivity extends ActionBarActivity {
 
-    private final String LOG_TAG = "MainActivity";
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private final String FORECASTFRAGMENT_TAG = "main_fragment";
+
+    private String mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,12 +23,11 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment())
+                    .add(R.id.container, new ForecastFragment(),FORECASTFRAGMENT_TAG)
                     .commit();
         }
+        mLocation = Utility.getPreferredLocation(this);
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -36,12 +38,8 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent launchSettings = new Intent(this,SettingsActivity.class);
             startActivity(launchSettings);
@@ -56,8 +54,7 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
     void displayLocation(){
-        String location = PreferenceManager.getDefaultSharedPreferences(this)
-                .getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
+        String location = Utility.getPreferredLocation(this);
         Uri.Builder builder = new Uri.Builder();
         Uri mapUri = builder.scheme("geo")
                 .authority("0,0")
@@ -96,6 +93,17 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onResume() {
+        String location = Utility.getPreferredLocation(this);
+        if(location != null && !location.equals(mLocation))
+        {
+            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().
+                    findFragmentByTag(FORECASTFRAGMENT_TAG);
+            if (ff != null)
+            {
+                ff.onLocationChanged();
+            }
+            mLocation = location;
+        }
         super.onResume();
         Log.i(LOG_TAG,"onResume");
     }

@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.master.mysunshine.data.WeatherContract;
-
 /**
  * {@link ForecastAdapter} exposes a list of weather forecasts
  * from a {@link android.database.Cursor} to a {@link android.widget.ListView}.
@@ -60,8 +58,18 @@ public class ForecastAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         // our view is pretty simple here --- just a text view
         // we'll keep the UI functional with a simple (and slow!) binding.
+        boolean isMetric = Utility.isMetric(context);
 
-        TextView tv = (TextView)view;
-        tv.setText(convertCursorRowToUXFormat(cursor));
+        TextView day = (TextView)view.findViewById(R.id.list_item_date_textview);
+        day.setText(Utility.getFriendlyDayString(context, cursor.getLong(ForecastFragment.COL_WEATHER_DATE)));
+
+        TextView description = (TextView)view.findViewById(R.id.list_item_forecast_textview);
+        description.setText(cursor.getString(ForecastFragment.COL_WEATHER_DESC));
+
+        TextView max = (TextView)view.findViewById(R.id.list_item_high_textview);
+        max.setText(Utility.formatTemperature(cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP), isMetric));
+
+        TextView min = (TextView)view.findViewById(R.id.list_item_low_textview);
+        min.setText(Utility.formatTemperature(cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP), isMetric));
     }
 }
