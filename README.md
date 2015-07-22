@@ -58,6 +58,11 @@ CursorAdapter
 o É um adaptador que passa o conteúdo de um cursor para um objeto do tipo ListView
 o O cursor deve conter uma coluna _ID;
 o Precisa ter a implementação dos métodos newView e bindView;
+o O método newView infla a view correspondente à posição do cursor, que pode ser obtida pelo uso do método getPosition;
+o O número de opções de layouts disponíveis deve ser passado sobrepondo o método getViewTypeCount;
+o A seleção do tipo de layout mais adequado deve ser feita sobrepondo o método getItemViewType;
+o O método bindView configura as informações das View (setText, setImageResource) com os dados do cursor;
+o Pode implementar um ViewHolder, a fim de evitar chamadas repetidas de findViewById.
 
 #######################################################
 Configurações e Preferências
@@ -207,3 +212,15 @@ o Possui 4 métodos: query (ler), insert (adicionar), update (atualizar) e delet
 UriMatcher
 o Classe de apoio para comparar URIs em ContentProviders;
 o Facilita realizar o match entre o path de uma Uri com os valores pré-definidos.
+
+#######################################################
+Loaders
+
+o São identificados por um identificador (int) único;
+o Requer a implementação da interface LoaderManager.LoaderCallbacks<Cursor>;
+o É iniciado durante o onActivityCreated com o método getLoaderManager().initLoader;
+o Precisa sobrepor o método onCreateLoader, que retorna um CursorLoader;
+o Precisa sobrepor o método onLoadFinished, que atualiza o cursor do CursorAdapter;
+o Precisa sobrepor o método onLoaderReset, que limpa o cursor do CursorAdapter.
+
+
