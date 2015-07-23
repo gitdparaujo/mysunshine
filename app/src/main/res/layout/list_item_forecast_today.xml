@@ -19,23 +19,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="?android:attr/listPreferredItemHeight"
-            android:text="Today"
             android:id="@+id/list_item_date_textview"
             android:singleLine="false" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="?android:attr/listPreferredItemHeight"
-            android:text="21º"
             android:id="@+id/list_item_high_textview" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="?android:attr/listPreferredItemHeight"
-            android:text="8º"
             android:id="@+id/list_item_low_textview" />
 
     </LinearLayout>
@@ -51,14 +45,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/list_item_icon"
-            android:src="@mipmap/ic_launcher_v2"
-            android:layout_weight="1" /> q
+            android:layout_weight="1" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="?android:attr/listPreferredItemHeight"
-            android:text="Sunny"
             android:id="@+id/list_item_forecast_textview" />
     </LinearLayout>
 
