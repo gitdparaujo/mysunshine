@@ -154,7 +154,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             float windSpeed = data.getFloat(COL_WIND_SPEED);
             float degrees = data.getFloat(COL_DEGREES);
             detailViewHolder.wind.setText(Utility.getFormattedWind(context, windSpeed, degrees));
-            detailViewHolder.icon.setImageResource(R.drawable.ic_launcher_v2);
+            int imageArt = Utility.getArtResourceForWeatherCondition(data.getInt(COL_WEATHER_CONDITION_ID));
+            detailViewHolder.icon.setImageResource(imageArt);
 
             forecastDetail = String.format("%s - %s - %s/%s",
                     new String[]{Utility.getFriendlyDayString(context,

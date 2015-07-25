@@ -90,7 +90,17 @@ public class ForecastAdapter extends CursorAdapter {
         viewHolder.minTempView.
                 setText(Utility.formatTemperature(context,cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP), isMetric));
 
-        viewHolder.iconView.
-                setImageResource(R.drawable.ic_launcher_v2);
+        int weatherIcon;
+        if(cursor.getPosition() == 0)
+        {
+            weatherIcon = Utility.
+                    getArtResourceForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID));
+        } else
+        {
+            weatherIcon = Utility.
+                    getIconResourceForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID));
+        }
+
+        viewHolder.iconView.setImageResource(weatherIcon);
     }
 }
