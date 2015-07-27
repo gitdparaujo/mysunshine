@@ -28,13 +28,14 @@ import com.example.master.mysunshine.data.WeatherContract;
  */
 public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    public String forecastDetail;
-    private Uri detailUri;
-    private ShareActionProvider shareActionProvider;
-    private DetailViewHolder detailViewHolder;
+    public String mForecastDetail;
+    private Uri mDetailUri;
+    private ShareActionProvider mShareActionProvider;
+    private DetailViewHolder mDetailViewHolder;
 
     private final String LOG_TAG = DetailFragment.class.getSimpleName();
     private final int DETAIL_LOADER = 0;
+    static final String DETAIL_URI = "URI";
 
     private static final String[] FORECAST_COLUMNS = {
 
@@ -81,11 +82,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         inflater.inflate(R.menu.menu_detail, menu);
 
         MenuItem shareItem = menu.findItem(R.id.action_share);
-        shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
 
-        if(forecastDetail != null)
+        if(mForecastDetail != null)
         {
-            shareActionProvider.setShareIntent(getShareIntent());
+            mShareActionProvider.setShareIntent(getShareIntent());
         }
 
         super.onCreateOptionsMenu(menu, inflater);
@@ -108,11 +109,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        Intent intent = getActivity().getIntent();
-        if(intent != null)
-        {
-            detailUri = intent.getData();
-        }
         getLoaderManager().initLoader(DETAIL_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
@@ -120,14 +116,24 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        if(args != null)
+        {
+            mDetailUri = args.getParcelable(DETAIL_URI);
+        }
+
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
-        detailViewHolder = new DetailViewHolder(view);
+        mDetailViewHolder = new DetailViewHolder(view);
         return view;
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), detailUri, FORECAST_COLUMNS, null, null, null);
+        if (mDetailUri == null)
+        {
+            return null;
+        }
+        return new CursorLoader(getActivity(), mDetailUri, FORECAST_COLUMNS, null, null, null);
     }
 
     @Override
@@ -138,34 +144,34 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             boolean isMetric = Utility.isMetric(context);
 
             String dayName = Utility.getDayName(context, data.getLong(COL_WEATHER_DATE));
-            detailViewHolder.dayName.setText(dayName);
+            mDetailViewHolder.dayName.setText(dayName);
             String monthday = Utility.getFormattedMonthDay(context, data.getLong(COL_WEATHER_DATE));
-            detailViewHolder.monthDay.setText(monthday);
+            mDetailViewHolder.monthDay.setText(monthday);
             String maxTemp = Utility.formatTemperature(context, data.getDouble(COL_WEATHER_MAX_TEMP), isMetric);
-            detailViewHolder.maxTemp.setText(maxTemp);
+            mDetailViewHolder.maxTemp.setText(maxTemp);
             String minTemp = Utility.formatTemperature(context, data.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
-            detailViewHolder.minTemp.setText(minTemp);
+            mDetailViewHolder.minTemp.setText(minTemp);
             String forecastDesc = data.getString(COL_WEATHER_DESC);
-            detailViewHolder.forecastDesc.setText(forecastDesc);
+            mDetailViewHolder.forecastDesc.setText(forecastDesc);
             double humidity = data.getDouble(COL_HUMIDITY);
-            detailViewHolder.humidity.setText(getString(R.string.format_humidity, humidity));
+            mDetailViewHolder.humidity.setText(getString(R.string.format_humidity, humidity));
             double pressure = data.getDouble(COL_PRESSURE);
-            detailViewHolder.pressure.setText(getString(R.string.format_pressure, pressure));
+            mDetailViewHolder.pressure.setText(getString(R.string.format_pressure, pressure));
             float windSpeed = data.getFloat(COL_WIND_SPEED);
             float degrees = data.getFloat(COL_DEGREES);
-            detailViewHolder.wind.setText(Utility.getFormattedWind(context, windSpeed, degrees));
+            mDetailViewHolder.wind.setText(Utility.getFormattedWind(context, windSpeed, degrees));
             int imageArt = Utility.getArtResourceForWeatherCondition(data.getInt(COL_WEATHER_CONDITION_ID));
-            detailViewHolder.icon.setImageResource(imageArt);
+            mDetailViewHolder.icon.setImageResource(imageArt);
 
-            forecastDetail = String.format("%s - %s - %s/%s",
+            mForecastDetail = String.format("%s - %s - %s/%s",
                     new String[]{Utility.getFriendlyDayString(context,
                             data.getLong(COL_WEATHER_DATE)),
                             forecastDesc,
                             maxTemp,
                             minTemp});
 
-            if (shareActionProvider != null) {
-                shareActionProvider.setShareIntent(getShareIntent());
+            if (mShareActionProvider != null) {
+                mShareActionProvider.setShareIntent(getShareIntent());
             }
         }
     }
@@ -178,7 +184,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         return new Intent(Intent.ACTION_SEND)
                 .setType("text/plain")
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
-                .putExtra(Intent.EXTRA_TEXT, forecastDetail + " #MySunshineApp");
+                .putExtra(Intent.EXTRA_TEXT, mForecastDetail + " #MySunshineApp");
     }
 
     public class DetailViewHolder
@@ -205,5 +211,15 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             icon = (ImageView) view.findViewById(R.id.detail_icon);
         }
     }
-
+    public void onLocationChanged(String newLocation)
+    {
+        Uri uri = mDetailUri;
+        if (uri != null)
+        {
+            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
+            Uri updateUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
+            mDetailUri = updateUri;
+            getLoaderManager().restartLoader(DETAIL_LOADER,null,this);
+        }
+    }
 }
