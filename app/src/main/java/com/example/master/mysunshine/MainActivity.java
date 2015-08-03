@@ -19,13 +19,15 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        boolean useTodayLayout;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         if(findViewById(R.id.weather_detail_container) != null)
         {
-            Log.i(LOG_TAG,"Entered in two pane mode");
             mTwoPane = true;
+            useTodayLayout = false;
             if(savedInstanceState == null)
             {
                 getSupportFragmentManager().beginTransaction()
@@ -35,10 +37,13 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         }
         else
         {
-            Log.i(LOG_TAG,"Entered in single pane mode");
             mTwoPane = false;
+            useTodayLayout = true;
             getSupportActionBar().setElevation(0f);
         }
+
+        ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+        ff.setUseTodayLayout(useTodayLayout);
 
         mLocation = Utility.getPreferredLocation(this);
     }

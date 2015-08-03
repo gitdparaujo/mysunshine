@@ -17,6 +17,7 @@ public class ForecastAdapter extends CursorAdapter {
 
     private final int VIEW_TYPE_TODAY = 0;
     private final int VIEW_TYPE_FUTURE_DAY = 1;
+    private boolean mUseTodayLayout;
 
     public ForecastAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
@@ -29,7 +30,12 @@ public class ForecastAdapter extends CursorAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return (position == 0) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+        return (position == 0 && mUseTodayLayout) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+    }
+
+    public void setUseTodayLayout(boolean useTodayLayout)
+    {
+        mUseTodayLayout = useTodayLayout;
     }
 
     public static class ViewHolder
@@ -59,7 +65,7 @@ public class ForecastAdapter extends CursorAdapter {
         int viewType = getItemViewType(cursor.getPosition());
         int layoutID = -1;
 
-        layoutID = (viewType == 0) ? R.layout.list_item_forecast_today : R.layout.list_item_forecast;
+        layoutID = (viewType == VIEW_TYPE_TODAY) ? R.layout.list_item_forecast_today : R.layout.list_item_forecast;
 
         View view = LayoutInflater.from(context).inflate(layoutID, parent, false);
 
@@ -91,7 +97,9 @@ public class ForecastAdapter extends CursorAdapter {
                 setText(Utility.formatTemperature(context,cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP), isMetric));
 
         int weatherIcon;
-        if(cursor.getPosition() == 0)
+        int viewType = getItemViewType(cursor.getPosition());
+
+        if(viewType == VIEW_TYPE_TODAY)
         {
             weatherIcon = Utility.
                     getArtResourceForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID));

@@ -65,6 +65,8 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
         // If it exists, return the current ID
         // Otherwise, insert it using the content resolver and the base URI
 
+        long locationID;
+
         Cursor c = mContext.getContentResolver().query(WeatherContract.LocationEntry.CONTENT_URI,
                 null,
                 WeatherContract.LocationEntry.COLUMN_CITY_NAME + " = ?",
@@ -73,7 +75,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
         if (c.moveToFirst())
         {
-            return c.getLong(c.getColumnIndex(WeatherContract.LocationEntry._ID));
+            locationID = c.getLong(c.getColumnIndex(WeatherContract.LocationEntry._ID));
         }
         else
         {
@@ -83,8 +85,10 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
             values.put(WeatherContract.LocationEntry.COLUMN_COORD_LONG, lon);
             values.put(WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING, locationSetting);
             Uri uri = mContext.getContentResolver().insert(WeatherContract.LocationEntry.CONTENT_URI, values);
-            return ContentUris.parseId(uri);
+            locationID = ContentUris.parseId(uri);
         }
+        c.close();;
+        return locationID;
     }
 
     /**
